@@ -63,7 +63,7 @@ search_content = html.Div([dbc.Row([dbc.Col(create_search_textbox(), md = 8), ##
 app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], prevent_initial_callbacks=True, suppress_callback_exceptions = True)
 server = app.server
 app.title = "business"
-app._favicon = ("./assets/desk.svg")
+#app._favicon = ("./assets/desk.svg")
 app.layout = dbc.Container(
     [
         #html.Img(src="assets/cell.svg", style={'height':'10%', 'width':'10%', "margin-top":"30px", "margin-left":"70px"}),

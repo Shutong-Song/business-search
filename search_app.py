@@ -16,7 +16,7 @@ def create_search_textbox():
     return dbc.InputGroup([
                     dbc.Input(id="input", placeholder="search business...", type="text", debounce=True,style = {"height": "50px", "margin-top":"20px"}),
                     dbc.Button(id = "speech", 
-                                   style = {"width": "30px", "height":"30px", "background-image": 'image_url(speech.png)', 
+                                   style = {"width": "30px", "height":"30px", "background-image": 'asset_path(speech.png)', 
                                             "background-size": "cover",
                                             "border-color": "transparent", "background-color":"transparent","margin-top": "30px", "margin-left":"-30px"}, 
                                    color = "transparent",
@@ -26,7 +26,7 @@ def create_search_textbox():
 ### 3. search click button
 def create_search_button():
     return dbc.Button(id='search_button', 
-                      style = {"width": "50px", "height":"50px", "background-image": 'image_url(search_button_logo.png)', 
+                      style = {"width": "50px", "height":"50px", "background-image": 'asset_path(search_button_logo.png)', 
                                 "background-size": "cover",
                                 "border-color": "transparent", "background-color":"transparent","margin-top": "20px"}, 
                       color = "transparent")

@@ -65,7 +65,7 @@ app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], prevent_initial_callback
 server = app.server
 server.wsgi_app = WhiteNoise(server.wsgi_app, root="static/")
 app.title = "business"
-#app._favicon = (r"desk.svg")
+app._favicon = (r"desk.svg")
 app.layout = dbc.Container(
     [
         #html.Img(src="assets/cell.svg", style={'height':'10%', 'width':'10%', "margin-top":"30px", "margin-left":"70px"}),

@@ -6,6 +6,7 @@ frontend of the search tab, includes:
 import dash_bootstrap_components as dbc
 from dash import html, dcc, Dash, Input, Output, State
 import dash_leaflet as dl
+from whitenoise import WhiteNoise
 
 
 ################################################################################ 
@@ -62,8 +63,9 @@ search_content = html.Div([dbc.Row([dbc.Col(create_search_textbox(), md = 8), ##
 ################################################################################ 
 app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], prevent_initial_callbacks=True, suppress_callback_exceptions = True)
 server = app.server
+server.wsgi_app = WhiteNoise(server.wsgi_app, root="static/")
 app.title = "business"
-app._favicon = ("https://raw.githubusercontent.com/Shutong-Song/business-search/main/assets/desk.svg")
+app._favicon = ("desk.svg")
 app.layout = dbc.Container(
     [
         #html.Img(src="assets/cell.svg", style={'height':'10%', 'width':'10%', "margin-top":"30px", "margin-left":"70px"}),

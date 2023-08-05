@@ -4,9 +4,9 @@ frontend of the search tab, includes:
 2. layout
 """
 import dash_bootstrap_components as dbc
-import dash
 from dash import html, dcc, Dash, Input, Output, State
 import dash_leaflet as dl
+from whitenoise import WhiteNoise
 
 
 ################################################################################ 
@@ -17,7 +17,7 @@ def create_search_textbox():
     return dbc.InputGroup([
                     dbc.Input(id="input", placeholder="search business...", type="text", debounce=True,style = {"height": "50px", "margin-top":"20px"}),
                     dbc.Button(id = "speech", 
-                                   style = {"width": "30px", "height":"30px", "background-image": f'url({dash.get_asset_url("speech.png")}', 
+                                   style = {"width": "30px", "height":"30px", "background-image": "url(speech.png)",
                                             "background-size": "cover",
                                             "border-color": "transparent", "background-color":"transparent","margin-top": "30px", "margin-left":"-30px"}, 
                                    color = "transparent",
@@ -27,7 +27,7 @@ def create_search_textbox():
 ### 3. search click button
 def create_search_button():
     return dbc.Button(id='search_button', 
-                      style = {"width": "50px", "height":"50px", "background-image": f'url({dash.get_asset_url("search_button_logo.png")}', 
+                      style = {"width": "50px", "height":"50px", "background-image": "url(search_button_logo.png)",
                                 "background-size": "cover",
                                 "border-color": "transparent", "background-color":"transparent","margin-top": "20px"}, 
                       color = "transparent")
@@ -63,9 +63,9 @@ search_content = html.Div([dbc.Row([dbc.Col(create_search_textbox(), md = 8), ##
 ################################################################################ 
 app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], prevent_initial_callbacks=True, suppress_callback_exceptions = True)
 server = app.server
-#server.wsgi_app = WhiteNoise(server.wsgi_app, root="static/")
+server.wsgi_app = WhiteNoise(server.wsgi_app, root="static/")
 app.title = "business"
-#app._favicon = dash.get_asset_url("desk.svg")
+app._favicon = (r"desk.svg")
 app.layout = dbc.Container(
     [
         #html.Img(src="assets/cell.svg", style={'height':'10%', 'width':'10%', "margin-top":"30px", "margin-left":"70px"}),
@@ -95,5 +95,5 @@ def save_input_search_query(clicks, nsub, input_value):
 
 
 if __name__ == '__main__':
-    #app.run_server(host = "localhost", port = 9011, debug = True)
-    app.run(debug = False)
+    app.run_server(host = "localhost", port = 9011, debug = True)
+    #app.run(debug = False)

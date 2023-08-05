@@ -95,5 +95,5 @@ def save_input_search_query(clicks, nsub, input_value):
 
 
 if __name__ == '__main__':
-    app.run_server(host = "localhost", port = 9011, debug = True)
-    #app.run(debug = False)
+    #app.run_server(host = "localhost", port = 9011, debug = True)
+    app.run(debug = False)

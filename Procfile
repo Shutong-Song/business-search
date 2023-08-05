@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath src search_app:server

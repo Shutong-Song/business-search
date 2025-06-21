@@ -4,9 +4,10 @@ frontend of the search tab, includes:
 2. layout
 """
 import dash_bootstrap_components as dbc
-from dash import html, dcc, Dash, Input, Output, State
+from dash import html, dcc, Dash, Input, Output, State, callback
 import dash_leaflet as dl
-from whitenoise import WhiteNoise
+#from dash_extensions.enrich import DashProxy
+#from whitenoise import WhiteNoise
 
 
 
@@ -57,7 +58,7 @@ def create_search_dd():
 ### 3. search click button
 def create_search_button():
     return dbc.Button(id='search_button', 
-                      style = {"width": "50px", "height":"50px", "background-image": "url(search_button_logo.png)",
+                      style = {"width": "50px", "height":"50px", "background-image": "url(assets/search_button_logo.png)",
                                 "background-size": "cover",
                                 "border-color": "transparent", "background-color":"transparent","margin-top": "20px"}, 
                       color = "transparent")
@@ -68,7 +69,7 @@ def create_search_button():
 # search tab content
 ################################################################################ 
 search_content = html.Div([dbc.Row([dbc.Col(create_search_textbox(), md = 8), ###create search bar
-                                    dbc.Col(create_search_dd(), md = 1),
+                                    dbc.Col(html.Div(create_search_dd()), md = 1),
                                   dbc.Col(create_search_button(), md = 1),
                                   ],
                             justify="left",
@@ -77,15 +78,17 @@ search_content = html.Div([dbc.Row([dbc.Col(create_search_textbox(), md = 8), ##
                             ),
 
                         ### create a box for map
-                        dbc.Row([
-                        dbc.Col(dl.Map(children = [dl.TileLayer(), dl.LayerGroup(id="container", children = [])], id = "map", preferCanvas=True, \
-                                        zoom = 7, center = (40.776676, -73.971321)))
-                        ], style = {"margin-left":"5%", "margin-right":"5%","margin-top":"5px", "border":"2px solid gray", "width":"90%", "height":"600px"}),
+                        html.Div(dl.Map([dl.TileLayer(), dl.LayerGroup(id="container", children = [])], id = "map", preferCanvas=True, 
+                                       zoom = 7, center = (40.776676, -73.971321))),
+                        #dbc.Row(
+                        #dbc.Col(dl.Map([dl.TileLayer(), dl.LayerGroup(id="container", children = [])], id = "map", preferCanvas=True, 
+                        #               zoom = 7, center = (40.776676, -73.971321)))
+                        #, style = {"margin-left":"5%", "margin-right":"5%","margin-top":"15px", "border":"2px solid gray", "width":"90%", "height":"600px"}),
 
                         # dcc.Store stores the intermediate value
                         dcc.Store(id='search-query-saved'),
                         html.Div(id = "test")
-                       ])
+                       ], style = {"margin-top": "40px"})
 
 
 
@@ -93,19 +96,23 @@ search_content = html.Div([dbc.Row([dbc.Col(create_search_textbox(), md = 8), ##
 ################################################################################ 
 # main App
 ################################################################################ 
-app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], prevent_initial_callbacks=True, suppress_callback_exceptions = True)
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP], prevent_initial_callbacks=True, suppress_callback_exceptions = True)
 server = app.server
-server.wsgi_app = WhiteNoise(server.wsgi_app, root="static/")
-app.title = "business"
-#app._favicon = ("/assets/favicon.ico")
+#server.wsgi_app = WhiteNoise(server.wsgi_app, root="static/")
+app.title = "NPI"
+app._favicon = ("favicon.ico")
 app.layout = dbc.Container(
     [
-        #html.Img(src="assets/cell.svg", style={'height':'10%', 'width':'10%', "margin-top":"30px", "margin-left":"70px"}),
-        html.Div(style = {"height": '10%', "margin-top": "30px"}),
-        html.Hr(),
-        dbc.Row(
-                    dbc.Tab(search_content, label="Search", disabled = False),
-                ),
+        dbc.Row([dbc.Col(create_search_textbox(), md = 8), ###create search bar
+                                    dbc.Col(html.Div(create_search_dd()), md = 1),
+                                  dbc.Col(create_search_button(), md = 1),
+                                  ],
+                            justify="left",
+                            className="g-0",
+                            style = {"margin-left": "15%"}),
+        #dbc.Row(html.Div(dl.Map([dl.TileLayer(), dl.LayerGroup(id="container", children = [])], id = "map", preferCanvas=True, 
+        #                               zoom = 7, center = (40.776676, -73.971321))))
+        dbc.Row(dl.Map([dl.TileLayer(), dl.LayerGroup(id="gcontainer")], center=[56, 10], zoom=6, style={"height": "80vh", "margin-top":"20px", "margin-left":"10%", "width": "170vh"}, id = "map", preferCanvas=True)),
     ], fluid = True)
 
 
@@ -113,7 +120,7 @@ app.layout = dbc.Container(
 ################################################################################ 
 # recalls
 ################################################################################ 
-@app.callback(Output("container", "children"),
+@callback(Output("gcontainer", "children"),
               [Input("search_button", "n_clicks"),
                Input("input", "n_submit"),
                State("input", "value")]
@@ -122,12 +129,13 @@ def save_input_search_query(clicks, nsub, input_value):
     ### save model prediction of user input query to dcc.Store
     search_query = input_value.strip() if input_value else "" ## if not input anything, input_value == None
     if (clicks is not None and search_query != "") or (nsub is not None and search_query != ""):
-        return [dl.Marker(position=[33.522143, -112.018481], children=dl.Tooltip("Golf Club"))]
+        print("clicked!!")
+        return [dl.Marker(position=[40.3134, 105.6482], children=dl.Tooltip("Golf Club"))]
     return []
 
 
 ### callback for dropdown select state and map will center to that state
-@app.callback(
+@callback(
     Output("map", "center"),
     Input('state-dropdown', 'value')
 )
@@ -135,5 +143,5 @@ def update_output(value):
     return [*state_mapping[value]]
 
 if __name__ == '__main__':
-    #app.run_server(host = "localhost", port = 9011, debug = True)
-    app.run(debug = False)
+    app.run(host = "localhost", port = 9901, debug = True)
+    #app.run(debug = False)

@@ -1,8 +1,9 @@
-dash==2.11.0
-gunicorn==20.1.0
-dash-bootstrap-components==1.4.2
-dash-core-components==2.0.0
-dash-extensions==1.0.3
-dash-html-components==2.0.0
-dash-leaflet==0.1.28
-whitenoise==6.5.0
+gunicorn==23.0.0
+dash==3.0.4
+dash-bootstrap-components==2.0.3
+dash_mantine_components==2.0.0
+dash-iconify==0.1.2
+
+#dash-extensions==1.0.3
+#dash-html-components==2.0.0
+dash-leaflet==1.1.3
